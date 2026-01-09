@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  web:
+    image: crpi-lzwvinqhz44z1c85.cn-hangzhou.personal.cr.aliyuncs.com/tctf/tctf:latest
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=t
+    restart: unless-stopped
+    volumes:
+      - ./uploads:/var/www/html/uploads
+      - ./challenges:/var/www/html/challenges
+      - ./upimg:/var/www/html/upimg
+
+  db:
+    image: crpi-lzwvinqhz44z1c85.cn-hangzhou.personal.cr.aliyuncs.com/tctf/mysql-tctf:8.2
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: t
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+    command: [
+      '--default-authentication-plugin=mysql_native_password',
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci'
+    ]
+
+volumes:
+  db_data:
