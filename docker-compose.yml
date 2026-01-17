@@ -1,36 +1,56 @@
 version: '3.8'
 
 services:
-  web:
-    image: crpi-lzwvinqhz44z1c85.cn-hangzhou.personal.cr.aliyuncs.com/tctf/tctf:latest
-    ports:
-      - "8000:80"
-    depends_on:
-      - db
+  mysql:
+    image: crpi-lzwvinqhz44z1c85.cn-hangzhou.personal.cr.aliyuncs.com/tctf/tctf-full-db:1.0
+    container_name: tctf-mysql
+    restart: always
     environment:
-      - DB_HOST=db
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=tctf
+      - MYSQL_USER=tctf_user
+      - MYSQL_PASSWORD=123456
+      - TZ=Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./config/mysql:/etc/mysql/conf.d
+      - ./logs/mysql:/var/log/mysql
+    networks:
+      - tctf-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  web:
+    image: crpi-lzwvinqhz44z1c85.cn-hangzhou.personal.cr.aliyuncs.com/tctf/tctf-full:1.0
+    container_name: tctf-web
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./upfile:/app/upfile
+      - ./logs/app:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    environment:
+      - FLASK_ENV=production
+      - DB_HOST=mysql
+      - DB_PORT=3306
       - DB_USER=root
       - DB_PASSWORD=123456
-      - DB_NAME=t
-    restart: unless-stopped
-    volumes:
-      - ./uploads:/var/www/html/uploads
-      - ./challenges:/var/www/html/challenges
-      - ./upimg:/var/www/html/upimg
+      - DB_NAME=tctf
+      - TZ=Asia/Shanghai
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - tctf-network
 
-  db:
-    image: crpi-lzwvinqhz44z1c85.cn-hangzhou.personal.cr.aliyuncs.com/tctf/mysql-tctf:8.2
-    environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: t
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: unless-stopped
-    command: [
-      '--default-authentication-plugin=mysql_native_password',
-      '--character-set-server=utf8mb4',
-      '--collation-server=utf8mb4_unicode_ci'
-    ]
-
-volumes:
-  db_data:
+networks:
+  tctf-network:
+    driver: bridge
