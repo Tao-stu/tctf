@@ -1,6 +1,6 @@
 # TCTF
 
-[使用文档](https://taoi.me/tctf.html)
+[使用文档](https://xxpic.pages.dev/tctf/tctf.html)
 
 > 精简 CTF 竞赛平台 Docker 一键部署
 
@@ -8,33 +8,33 @@
 
 ### index
 
-![image-20260508152640479](G:\Desktop\tctf\README.assets\image-20260508152640479.png)
+![image-20260508152640479](https://xxpic.pages.dev/tctf/image-20260508152640479.png)
 
 ### 登录
 
-![image-20260508152721823](G:\Desktop\tctf\README.assets\image-20260508152721823.png)
+![image-20260508152721823](https://xxpic.pages.dev/tctf/image-20260508152721823.png)
 
 ### 题目
 
-![image-20260508152810123](G:\Desktop\tctf\README.assets\image-20260508152810123.png)
+![image-20260508152810123](https://xxpic.pages.dev/tctf/image-20260508152810123.png)
 
 ### 竞赛功能
 
-![image-20260508153138454](G:\Desktop\tctf\README.assets\image-20260508153138454.png)
+![image-20260508153138454](https://xxpic.pages.dev/tctf/image-20260508153138454.png)
 
-![image-20260508153213591](G:\Desktop\tctf\README.assets\image-20260508153213591.png)
+![image-20260508153213591](https://xxpic.pages.dev/tctf/image-20260508153213591.png)
 
-![image-20260508153232862](G:\Desktop\tctf\README.assets\image-20260508153232862.png)
+![image-20260508153232862](https://xxpic.pages.dev/tctf/image-20260508153232862.png)
 
-![image-20260508153311084](G:\Desktop\tctf\README.assets\image-20260508153311084.png)
+![image-20260508153311084](https://xxpic.pages.dev/tctf/image-20260508153311084.png)
 
 ### 后台管理
 
-![image-20260508153340453](G:\Desktop\tctf\README.assets\image-20260508153340453.png)
+![image-20260508153340453](https://xxpic.pages.dev/tctf/image-20260508153340453.png)
 
 ### 提建议
 
-![image-20260508153407366](G:\Desktop\tctf\README.assets\image-20260508153407366.png)
+![image-20260508153407366](https://xxpic.pages.dev/tctf/image-20260508153407366.png)
 
 ## 功能特性
 
