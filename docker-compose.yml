@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  web:
+    image: crpi-lzwvinqhz44z1c85.cn-hangzhou.personal.cr.aliyuncs.com/tctf/tctf-web:v1.0
+    container_name: tctf-web
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./upfile:/app/upfile
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    environment:
+      - FLASK_ENV=production
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=tctf
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - tctf-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  mysql:
+    image: crpi-lzwvinqhz44z1c85.cn-hangzhou.personal.cr.aliyuncs.com/tctf/mysql8.2:latest
+    container_name: tctf-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: tctf
+      MYSQL_USER: tctf_user
+      MYSQL_PASSWORD: tctf_password
+      TZ: Asia/Shanghai
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --init-connect='SET NAMES utf8mb4'
+    networks:
+      - tctf-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: crpi-lzwvinqhz44z1c85.cn-hangzhou.personal.cr.aliyuncs.com/tctf/redis-alpine:latest
+    container_name: tctf-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - tctf-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  tctf-network:
+    driver: bridge
